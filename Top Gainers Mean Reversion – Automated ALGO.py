@@ -499,4 +499,4 @@ logging.info("Disconnected from IBKR.")
 #Trading financial instruments such as stocks, options, or derivatives involves significant risk of loss and may not be suitable for all investors. You are solely responsible for any decisions or trades you make.
 #Before using this system, consult with a qualified financial advisor and ensure compliance with your local regulations and your broker’s terms of service.
 #The author is not liable for any damages, financial losses, or legal issues resulting from the use of this codebase.
-#--------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
