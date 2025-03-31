@@ -8,8 +8,9 @@ import os
 from datetime import datetime, timedelta
 from pathlib import Path
 
-# File locking (Linux/Mac). On Windows, consider portalocker or similar library.
+# File locking (Linux/Mac) import fcntl . On Windows, consider import portalocker or similar library.
 import fcntl
+import portalocker
 
 from ibapi.client import EClient
 from ibapi.wrapper import EWrapper
