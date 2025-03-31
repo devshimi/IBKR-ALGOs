@@ -5,6 +5,11 @@ import logging
 import threading
 from datetime import datetime, timedelta
 import yfinance as yf
+
+# File locking (Linux/Mac) import fcntl . On Windows, consider import portalocker or similar library.
+import fcntl
+import portalocker
+
 from ib_insync import IB, Stock, Option, LimitOrder, TrailStopOrder, util, Contract, Order
 
 # ------------------------------------------------------------------------------
