@@ -27,10 +27,8 @@ This repository contains a comprehensive automated trading system integrated wit
     cd trading_system
     ```
 
-2. **Install dependencies**:
-    ```bash
-    pip install -r requirements.txt
-    ```
+2. **2. Install the required libraries**
+    
 
 3. **Set up environment variables**:
     Create a `.env` file in the root directory and add the following variables:
