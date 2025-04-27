@@ -1,36 +1,36 @@
 // Import necessary modules and libraries
-use std::collections::HashMap;            // For storing key-value pairs
+use std::collections::HashMap; // For storing key-value pairs
 use chrono::{Datelike, Local, NaiveDate}; // For date and time handling
-use log::{info, error};                   // For logging
-use serde::{Deserialize, Serialize};      // For serialization and deserialization
-use serde_json;                           // For JSON handling
-use std::sync::Arc;                       // For thread-safe shared state
-use tokio::sync::{Mutex, RwLock};         // For async thread-safe shared state
-use std::time::{Duration, Instant};       // For timing
-use tokio::fs;                            // For async file operations
-use lru::LruCache;                        // For caching with least-recently-used eviction
-use rand::Rng;                            // For random number generation
-use ibapi::client::IBClient;              // For interacting with IB API
-use ibapi::contract::{Contract, Stock};   // For defining financial contracts
-use tokio::time::sleep;                   // For async sleep
-use env_logger::Env;                      // For environment-based logger configuration
+use log::{info, error}; // For logging
+use serde::{Deserialize, Serialize}; // For serialization and deserialization
+use serde_json; // For JSON handling
+use std::sync::Arc; // For thread-safe shared state
+use tokio::sync::{Mutex, RwLock}; // For async thread-safe shared state
+use std::time::{Duration, Instant}; // For timing
+use tokio::fs; // For async file operations
+use lru::LruCache; // For caching with least-recently-used eviction
+use rand::Rng; // For random number generation
+use ibapi::client::IBClient; // For interacting with IB API
+use ibapi::contract::{Contract, Stock}; // For defining financial contracts
+use tokio::time::sleep; // For async sleep
+use env_logger::Env; // For environment-based logger configuration
 
 /// Application configuration, loaded from environment variables.
 #[derive(Clone, Debug)]
 struct Config {
-    ib_host: String,                      // IB host address
-    ib_port: i32,                         // IB port number
-    ib_client_id: i32,                    // IB client ID
-    portfolio_size: f64,                  // Total portfolio size
-    alloc_pct: f64,                       // Allocation percentage for new trades
-    stoploss_pct: f64,                    // Stop-loss percentage
-    trailing_stop_pct: f64,               // Trailing stop percentage
-    positions_file: String,               // File path for storing positions
-    scheduler_interval: u64,              // Interval for trading scheduler
-    max_retries: u32,                     // Maximum number of retries for operations
-    retry_delay_ms: u64,                  // Delay between retries in milliseconds
-    rate_limit_max_requests: usize,       // Max requests for rate limiting
-    rate_limit_window_ms: u64,            // Time window for rate limiting in milliseconds
+    ib_host: String, // IB host address
+    ib_port: i32, // IB port number
+    ib_client_id: i32, // IB client ID
+    portfolio_size: f64, // Total portfolio size
+    alloc_pct: f64, // Allocation percentage for new trades
+    stoploss_pct: f64, // Stop-loss percentage
+    trailing_stop_pct: f64, // Trailing stop percentage
+    positions_file: String, // File path for storing positions
+    scheduler_interval: u64, // Interval for trading scheduler
+    max_retries: u32, // Maximum number of retries for operations
+    retry_delay_ms: u64, // Delay between retries in milliseconds
+    rate_limit_max_requests: usize, // Max requests for rate limiting
+    rate_limit_window_ms: u64, // Time window for rate limiting in milliseconds
 }
 
 impl Config {
@@ -44,19 +44,19 @@ impl Config {
         }
 
         Config {
-            ib_host: env::var("IB_HOST").unwrap_or_else(|_| "127.0.0.1".into()),                    // IB host
-            ib_port: var("IB_PORT", "7497"),                                                        // IB port
-            ib_client_id: var("IB_CLIENT_ID", "123"),                                               // client ID
-            portfolio_size: var("PORTFOLIO_SIZE", "100000.0"),                                      // portfolio size
-            alloc_pct: var("ALLOC_PCT", "0.10"),                                                    // allocation percentage
-            stoploss_pct: var("STOPLOSS_PCT", "0.30"),                                              // stop-loss percentage
-            trailing_stop_pct: var("TRAILING_STOP_PCT", "0.10"),                                    // trailing stop percentage
+            ib_host: env::var("IB_HOST").unwrap_or_else(|_| "127.0.0.1".into()), // IB host
+            ib_port: var("IB_PORT", "7497"), // IB port
+            ib_client_id: var("IB_CLIENT_ID", "123"), // client ID
+            portfolio_size: var("PORTFOLIO_SIZE", "100000.0"), // portfolio size
+            alloc_pct: var("ALLOC_PCT", "0.10"), // allocation percentage
+            stoploss_pct: var("STOPLOSS_PCT", "0.30"), // stop-loss percentage
+            trailing_stop_pct: var("TRAILING_STOP_PCT", "0.10"), // trailing stop percentage
             positions_file: env::var("POSITIONS_FILE").unwrap_or_else(|_| "positions.json".into()), // positions file
-            scheduler_interval: var("SCHEDULER_INTERVAL", "300"),                                   // scheduler interval
-            max_retries: var("MAX_RETRIES", "3"),                                                   // max retries
-            retry_delay_ms: var("RETRY_DELAY_MS", "500"),                                           // retry delay
-            rate_limit_max_requests: var("RATE_LIMIT_MAX_REQUESTS", "50"),                          // rate limit max requests
-            rate_limit_window_ms: var("RATE_LIMIT_WINDOW_MS", "1000"),                              // rate limit window
+            scheduler_interval: var("SCHEDULER_INTERVAL", "300"), // scheduler interval
+            max_retries: var("MAX_RETRIES", "3"), // max retries
+            retry_delay_ms: var("RETRY_DELAY_MS", "500"), // retry delay
+            rate_limit_max_requests: var("RATE_LIMIT_MAX_REQUESTS", "50"), // rate limit max requests
+            rate_limit_window_ms: var("RATE_LIMIT_WINDOW_MS", "1000"), // rate limit window
         }
     }
 }
@@ -95,13 +95,13 @@ fn safe_read_json(filepath: &str) -> io::Result<Value> {
 /// Wrapper around the IBKR client, adding rate‐limiting, retries,
 /// shared state, and automated trade logic.
 struct IBKR {
-    client: EClient,                          // IB client instance
-    next_order_id: Arc<Mutex<Option<i32>>>,   // Shared state for next order ID
+    client: EClient, // IB client instance
+    next_order_id: Arc<Mutex<Option<i32>>>, // Shared state for next order ID
     scanner_symbols: Arc<Mutex<Vec<String>>>, // Shared state for scanner symbols
-    hist_data: Arc<Mutex<Vec<BarData>>>,      // Shared state for historical data
-    config: Config,                           // Configuration settings
-    rate_limiter: Arc<RateLimiter>,           // Rate limiter instance
-    positions: Arc<Mutex<Value>>,             // Shared state for open positions
+    hist_data: Arc<Mutex<Vec<BarData>>>, // Shared state for historical data
+    config: Config, // Configuration settings
+    rate_limiter: Arc<RateLimiter>, // Rate limiter instance
+    positions: Arc<Mutex<Value>>, // Shared state for open positions
 }
 
 impl IBKR {
