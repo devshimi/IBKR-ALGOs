@@ -1,6 +1,6 @@
 ## Overview
 
-This repository contains a comprehensive automated trading system integrated with Interactive Brokers (IBKR) via `ib_insync` and the `ibapi` library. The system is designed for algorithmic trading and includes functionalities for:
+This repository contains a comprehensive automated trading system integrated with Interactive Brokers (IBKR). The system is designed for algorithmic trading and includes functionalities for:
 
 - **IBKR Connectivity and Market Data Handling**
 - **Risk Management and Position Sizing**
@@ -41,7 +41,7 @@ This repository contains a comprehensive automated trading system integrated wit
 ## Usage
 
 1. **Run the trading system**:
-    ```bash
+    ```bash # Type the filename to run and execute the script
     
 ## Disclaimer
 
