@@ -1,6 +1,6 @@
-## Overview
+## IBKR ALGOs
 
-This repository contains a comprehensive automated trading system integrated with Interactive Brokers (IBKR). The system is designed for algorithmic trading and includes functionalities for:
+This repository contains a comprehensive automated trading algorithms integrated with Interactive Brokers (IBKR). The system is designed for algorithmic trading and includes functionalities for:
 
 - **IBKR Connectivity and Market Data Handling**
 - **Risk Management and Position Sizing**
