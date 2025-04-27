@@ -1,17 +1,17 @@
 // Imports & Dependencies
 // Standard library:
-use std::sync::{Arc, atomic::{AtomicU64, Ordering}};                   // Shared ownership & atomic counter
-use std::time::{Duration, Instant};                                    // Timing and timeouts
-use std::collections::VecDeque;                                        // Ring-buffer for price history
-use std::env;                                                          // Access to environment variables
+use std::sync::{Arc, atomic::{AtomicU64, Ordering}}; // Shared ownership & atomic counter
+use std::time::{Duration, Instant}; // Timing and timeouts
+use std::collections::VecDeque; // Ring-buffer for price history
+use std::env; // Access to environment variables
 
 // Tokio: asynchronous runtime primitives
-use tokio::{spawn,                                                     // Spawn async tasks
-    sync::{broadcast::{self, Sender as BroadcastSender}, Semaphore},   // Event broadcasting & concurrency control
-    time::{interval, sleep, timeout},                                  // Timers and delays
+use tokio::{spawn, // Spawn async tasks
+    sync::{broadcast::{self, Sender as BroadcastSender}, Semaphore}, // Event broadcasting & concurrency control
+    time::{interval, sleep, timeout}, // Timers and delays
 };
 
-use futures::stream::{FuturesUnordered, StreamExt};                    // Futures: manage multiple concurrent futures
+use futures::stream::{FuturesUnordered, StreamExt}; // Futures: manage multiple concurrent futures
 // IB API: client, market data, contracts, order status
 use ibapi::{
     Action,
@@ -19,12 +19,12 @@ use ibapi::{
     Contract,
     OrderStatus,
 };
-use log::{debug, info, warn, error};                                   // Debug, info, warn, error
-use reqwest::Client;                                                   // HTTP client
-use serde::Serialize;                                                  // Serialize
-use lettre::{AsyncSmtpTransport, Tokio1Executor, Message};             // Async SMTP transport
-use lettre::transport::smtp::authentication::Credentials;              // SMTP authentication
-use thiserror::Error;                                                  // Error definitions
+use log::{debug, info, warn, error}; // Debug, info, warn, error
+use reqwest::Client; // HTTP client
+use serde::Serialize; // Serialize
+use lettre::{AsyncSmtpTransport, Tokio1Executor, Message}; // Async SMTP transport
+use lettre::transport::smtp::authentication::Credentials; // SMTP authentication
+use thiserror::Error; // Error definitions
 
 // Alert Channels & Error Types
 
