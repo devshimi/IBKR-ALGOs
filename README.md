@@ -5,7 +5,6 @@ This repository contains a comprehensive automated trading algorithms integrated
 - **IBKR Connectivity and Market Data Handling**
 - **Risk Management and Position Sizing**
 - **Order Execution, Including Multi-Leg Strategy Implementation and Short-Top-Gainers Strategy**
-- **Backtesting Simulation with Realistic Trade Execution (Slippage, Partial Fills)**
 - **Performance Metrics Calculation**
 - **Real-Time Position Monitoring and Interactive Command Loop**
 
@@ -16,7 +15,6 @@ This repository contains a comprehensive automated trading algorithms integrated
 - **Risk Management**: Implements risk management strategies, including position sizing, stop losses, and trailing stops.
 - **Order Execution**: Places orders with retry logic, including trailing stop orders, and handles multi-leg strategies and short-top-gainers strategy.
 - **Strategy Implementation**: Executes various trading strategies such as Straddle, Iron Condor, Covered Call, and Short-Top-Gainers.
-- **Backtesting**: Simulates trade execution and calculates performance metrics.
 - **Real-Time Monitoring**: Monitors open positions in real-time and provides an interactive command loop.
 
 ## Installation
