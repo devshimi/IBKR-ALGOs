@@ -1,19 +1,19 @@
 // Import necessary modules and libraries
-use std::collections::HashMap; // For storing key-value pairs
-use chrono::{Datelike, Local, NaiveDate}; // For date and time handling
-use log::{info, error}; // For logging
-use serde::{Deserialize, Serialize}; // For serialization and deserialization
-use serde_json; // For JSON handling
-use std::sync::Arc; // For thread-safe shared state
-use tokio::sync::{Mutex, RwLock}; // For async thread-safe shared state
-use std::time::{Duration, Instant}; // For timing
-use tokio::fs; // For async file operations
-use lru::LruCache; // For caching with least-recently-used eviction
-use rand::Rng; // For random number generation
-use ibapi::client::IBClient; // For interacting with IB API
+use std::collections::HashMap;          // For storing key-value pairs
+use chrono::{Datelike, Local, NaiveDate}; // For handling date and time
+use log::{info, error};                 // For logging information and errors
+use serde::{Deserialize, Serialize};    // For serialization and deserialization
+use serde_json;                         // For handling JSON data
+use std::sync::Arc;                     // For thread-safe shared state
+use tokio::sync::{Mutex, RwLock};       // For async thread-safe shared state
+use std::time::{Duration, Instant};     // For measuring time intervals
+use tokio::fs;                          // For async file operations
+use lru::LruCache;                      // For LRU caching
+use rand::Rng;                          // For generating random numbers
+use ibapi::client::IBClient;            // For interacting with the IB API
 use ibapi::contract::{Contract, Stock}; // For defining financial contracts
-use tokio::time::sleep; // For async sleep
-use env_logger::Env; // For environment-based logger configuration
+use tokio::time::sleep;                 // For async sleep operations
+use env_logger::Env;                    // For configuring the logger via environment
 
 // Define a configuration structure for the application
 #[derive(Serialize, Deserialize)]
@@ -31,21 +31,21 @@ struct Config {
     positions_file: String, // File path for positions
 }
 
-// Implement default values for the Config structure
+// Implement values for the Config structure
 impl Default for Config {
     fn default() -> Self {
         Config {
-            ib_host: std::env::var("IB_HOST").unwrap_or_else(|_| "127.0.0.1".to_string()), // Default host
-            ib_port: std::env::var("IB_PORT").unwrap_or_else(|_| "7497".to_string()).parse().unwrap(), // Default port
-            ib_client_id: std::env::var("IB_CLIENT_ID").unwrap_or_else(|_| "1".to_string()).parse().unwrap(), // Default client ID
+            ib_host: std::env::var("IB_HOST").unwrap_or_else(|_| "127.0.0.1".to_string()), // Host
+            ib_port: std::env::var("IB_PORT").unwrap_or_else(|_| "7497".to_string()).parse().unwrap(), // Port
+            ib_client_id: std::env::var("IB_CLIENT_ID").unwrap_or_else(|_| "1".to_string()).parse().unwrap(), // Client ID
             portfolio_size: get_portfolio_size_from_brokerage().unwrap_or(1_000_000.0), // Get portfolio size from brokerage
-            options_alloc_pct: 0.1, // Default options allocation percentage
-            options_expiration: "20250419".to_string(), // Default options expiration date
-            risk_per_trade: 0.02, // Default risk per trade
-            trail_stop_percent: 0.02, // Default trailing stop percentage
-            schedule_interval: 60, // Default schedule interval
-            strike_cache_file: "strike_cache.json".to_string(), // Default strike cache file
-            positions_file: "positions.json".to_string(), // Default positions file
+            options_alloc_pct: 0.1, // Options allocation percentage
+            options_expiration: "20250419".to_string(), // Options expiration date
+            risk_per_trade: 0.02, // Risk per trade
+            trail_stop_percent: 0.02, // Trailing stop percentage
+            schedule_interval: 60, // Schedule interval
+            strike_cache_file: "strike_cache.json".to_string(), // Strike cache file
+            positions_file: "positions.json".to_string(), // Positions file
         }
     }
 }
