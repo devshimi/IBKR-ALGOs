@@ -41,7 +41,7 @@ This repository contains a comprehensive automated trading system integrated wit
 ## Usage
 
 1. **Run the trading system**:
-    ```bash # Type the filename to run and execute the script
+    ```bash Type the filename to run and execute the script
     
 ## Disclaimer
 
