@@ -23,7 +23,7 @@ This repository contains a comprehensive automated trading system integrated wit
 
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/devshimi/trading_system.git
+    git clone https://github.com/devshimi/IBKR-ALGOs.git
     cd trading_system
     ```
 
@@ -42,16 +42,7 @@ This repository contains a comprehensive automated trading system integrated wit
 
 1. **Run the trading system**:
     ```bash
-    python trading_system.py
-    ```
-
-2. **Interactive Command Loop**:
-    - `run`: Execute strategy using live market data
-    - `back`: Run backtesting simulation
-    - `risk`: Trigger dynamic risk management check
-    - `advanced`: Execute advanced options strategy (manual trigger)
-    - `exit`: Disconnect and exit system
-
+    
 ## Disclaimer
 
 This project is provided for educational and research purposes only. It is not financial advice, nor an invitation to trade or invest.
